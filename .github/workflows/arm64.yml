@@ -22,7 +22,7 @@ jobs:
       run: |
         # Grab latest release from official repostiory and latest release version from this repostiory
         LATEST_TOOLKIT="$(curl -u ${{ github.actor }}:${{ secrets.GITHUB_TOKEN }} -s https://api.github.com/repos/NVIDIA/nvidia-container-toolkit/tags | jq -r '.[] | select(.name | test("-(rc|beta|alpha)"; "i") | not) | .name' | sort -V | tail -1 | sed 's/^v//')"
-        CURRENT_TOOLKIT="$(curl -u ${{ github.actor }}:${{ secrets.GITHUB_TOKEN }} -s https://api.github.com/repos/${{ github.repository }}/mos-nvidia-container-toolkit/releases/latest | jq -r '.tag_name' | sed 's/^v//')"
+        CURRENT_TOOLKIT="$(curl -u ${{ github.actor }}:${{ secrets.GITHUB_TOKEN }} -s https://api.github.com/repos/${{ github.repository_owner }}/mos-nvidia-container-toolkit/releases/latest | jq -r '.tag_name' | sed 's/^v//')"
 
         echo "CREATE_RELEASE=true" >> $GITHUB_ENV
         echo "TOOLKIT_VERSION=${LATEST_TOOLKIT}" >> $GITHUB_ENV
@@ -41,7 +41,7 @@ jobs:
         docker run --rm \
           -v ${{ github.workspace }}/output:/tmp \
           -e TOOLKIT_VERSION=${TOOLKIT_VERSION} \
-          ghcr.io/${{ github.repository }}/mos-nvidia-container-toolkit:buster_arm
+          ghcr.io/${{ github.repository_owner }}/mos-nvidia-container-toolkit:buster_arm
 
 
     - name: Create and Upload Release
